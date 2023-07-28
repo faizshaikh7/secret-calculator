@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:calculator/provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_pro/webview_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,13 +35,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
     final PermissionStatus perPermission =
         await Permission.mediaLibrary.request();
 
-    // final PermissionStatus cameraPermission = await Permission.camera.request();
-    // if (cameraPermission != PermissionStatus.granted) {
-    //   log("Permission Deny");
-    //   throw ("Permission Denied");
-    // } else {
-    //   log("contact permission granted");
-    // }
+    final PermissionStatus cameraPermission = await Permission.camera.request();
+    if (cameraPermission != PermissionStatus.granted) {
+      log("Permission Deny");
+      throw ("Permission Denied");
+    } else {
+      log("contact permission granted");
+    }
 
     final PermissionStatus microphonePermission =
         await Permission.microphone.request();
@@ -59,60 +59,52 @@ class _WebViewScreenState extends State<WebViewScreen> {
     super.initState();
     geturl();
     requestPermission();
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+    // if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          // ignore: deprecated_member_use
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(message.message)));
-        });
-  }
+  late InAppWebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
     var webUrl = Provider.of<UserProvider>(context).webUrl;
 
-    // geturl();
     return Scaffold(
         body: SafeArea(
       child: Center(
         child: (webUrl!.isNotEmpty)
-            ? WebView(
-                initialUrl: webUrl,
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController webViewController) {
-                  _controller.complete(webViewController);
+            ? InAppWebView(
+                onConsoleMessage: (controller, consoleMessage) {
+                  log(consoleMessage.message);
                 },
-                onProgress: (int progress) {
-                  print("WebView is loading (progress : $progress%)");
+                initialUrlRequest: URLRequest(
+                  url: Uri.parse(webUrl),
+                ),
+                initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      mediaPlaybackRequiresUserGesture: false,
+                      // javaScriptEnabled: true,
+                      // allowFileAccessFromFileURLs: true,
+                      // debuggingEnabled: true,
+                      // cacheEnabled: true,
+                    ),
+                    android: AndroidInAppWebViewOptions(
+                        thirdPartyCookiesEnabled: true)),
+                onWebViewCreated: (InAppWebViewController controller) {
+                  _webViewController = controller;
                 },
-                javascriptChannels: <JavascriptChannel>{
-                  _toasterJavascriptChannel(context),
+                androidOnPermissionRequest: (InAppWebViewController controller,
+                    String origin, List<String> resources) async {
+                  return PermissionRequestResponse(
+                      resources: resources,
+                      action: PermissionRequestResponseAction.GRANT);
                 },
-                navigationDelegate: (NavigationRequest request) {
-                  if (request.url.startsWith('https://www.youtube.com/')) {
-                    print('blocking navigation to $request}');
-                    return NavigationDecision.prevent;
-                  }
-                  print('allowing navigation to $request');
-                  return NavigationDecision.navigate;
+                onProgressChanged:
+                    (InAppWebViewController controller, int progress) {
+                  setState(() {
+                    var iProgress = progress / 100;
+                    log(iProgress.toString());
+                  });
                 },
-                onPageStarted: (String url) {
-                  print('Page started loading: $url');
-                },
-                onPageFinished: (String url) {
-                  print('Page finished loading: $url');
-                },
-                gestureNavigationEnabled: true,
-                geolocationEnabled: false, //support geolocation or not
-                allowsInlineMediaPlayback: true,
               )
             : const CircularProgressIndicator(),
       ),

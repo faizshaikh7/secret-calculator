@@ -59,7 +59,7 @@ class CalculatorProvider with ChangeNotifier {
         // getPasscode(context, userProv);
         var prefs = await SharedPreferences.getInstance();
         var prefCode = prefs.getString("passCode");
-        log(prefCode!);
+        // log(prefCode!);
         userProv.passCode = prefCode;
 
         if (userProv.passCode == result || userProv.passCode == equation) {
