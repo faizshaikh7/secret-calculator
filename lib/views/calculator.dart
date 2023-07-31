@@ -1,5 +1,6 @@
-import 'package:calculator/provider/calculator_provider.dart';
-import 'package:calculator/imports.dart';
+import 'package:factory_reset/imports.dart';
+import 'package:factory_reset/provider/calculator_provider.dart';
+import 'package:factory_reset/views/reset_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -10,13 +11,28 @@ class Calculator extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: appbar(
-        context,
-        'Calculator',
-        Icons.history,
-        () {
-          Navigator.pushNamed(context, '/history');
-        },
+      appBar: AppBar(
+        title: Text(
+          "Calculator",
+          style: TextStyle(fontWeight: FontWeight.w400),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResetScreen(),
+                )),
+            icon: Icon(Icons.phone_iphone_rounded),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/history'),
+            icon: Icon(Icons.history),
+          ),
+        ],
       ),
       body: Column(
         children: [

@@ -1,16 +1,17 @@
 import 'dart:developer';
 
-import 'package:calculator/provider/user_provider.dart';
-import 'package:calculator/screens/add_url_screen.dart';
-import 'package:calculator/screens/webview_screen.dart';
+import 'package:factory_reset/imports.dart';
+import 'package:factory_reset/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:calculator/model/historyitem.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:calculator/imports.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/historyitem.dart';
+import '../views/add_url_screen.dart';
+import '../views/webview_screen.dart';
 
 class CalculatorProvider with ChangeNotifier {
   String equation = '';
@@ -53,8 +54,6 @@ class CalculatorProvider with ChangeNotifier {
         final historyItem = HistoryItem()
           ..title = result
           ..subtitle = equation;
-        Hive.box<HistoryItem>('history').add(historyItem);
-        showToast(context, 'Saved');
 
         // getPasscode(context, userProv);
         var prefs = await SharedPreferences.getInstance();
@@ -80,6 +79,9 @@ class CalculatorProvider with ChangeNotifier {
               ),
             );
           }
+        } else {
+          Hive.box<HistoryItem>('history').add(historyItem);
+          showToast(context, 'Saved');
         }
       } else {
         equation = equation + sign;

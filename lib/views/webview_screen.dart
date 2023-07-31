@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:calculator/provider/user_provider.dart';
+import 'package:factory_reset/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -66,12 +66,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var webUrl = Provider.of<UserProvider>(context).webUrl;
+    final webUrl = Provider.of<UserProvider>(context).webUrl;
 
     return Scaffold(
         body: SafeArea(
       child: Center(
-        child: (webUrl!.isNotEmpty)
+        child: (webUrl != null)
             ? InAppWebView(
                 onConsoleMessage: (controller, consoleMessage) {
                   log(consoleMessage.message);

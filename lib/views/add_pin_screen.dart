@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:calculator/provider/user_provider.dart';
-import 'package:calculator/screens/calculator.dart';
-import 'package:calculator/screens/webview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../imports.dart';
+import '../provider/user_provider.dart';
+import 'calculator.dart';
 
 class AddPinScreen extends StatefulWidget {
   const AddPinScreen({super.key});

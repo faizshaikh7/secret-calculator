@@ -1,21 +1,10 @@
-# secret-calculator
-**Preview :**
+# factory_reset
 
+A demo application to wipe device data by factory reset.
 
-# Explanation
-A calculator for simple calculations.
-Also you can save some of your calculations in the app or clear your history.
+## Getting Started
 
-I will appreciate if you give star to this project.
-The project will progress over the time.
+This project is a demo implementing Android Admin Device Policy Manger with Flutter Method Channel.
 
-# Resources
-UI from : https://dribbble.com/
-
-Used packages:
-  hive,
-  hive_flutter,
-  math_expressions,
-  provider, 
-  build_runner and
-  hive_generator.
+For help getting started with Android Device Policy, view the
+[online documentation](https://developer.android.com/reference/android/app/admin/DevicePolicyManager/), which offers code samples and a full API reference.

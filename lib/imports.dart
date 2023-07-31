@@ -1,4 +1,4 @@
-import 'package:calculator/provider/calculator_provider.dart';
+import 'package:factory_reset/provider/calculator_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +19,13 @@ AppBar appbar(
       style: TextStyle(fontWeight: FontWeight.w400),
     ),
     actions: [
+      IconButton(
+        onPressed: tap,
+        icon: Icon(icon),
+      ),
+      SizedBox(
+        width: 5,
+      ),
       IconButton(
         onPressed: tap,
         icon: Icon(icon),

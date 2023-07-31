@@ -1,7 +1,8 @@
-import 'package:calculator/model/historyitem.dart';
-import 'package:calculator/imports.dart';
+import 'package:factory_reset/imports.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+
+import '../model/historyitem.dart';
 
 class History extends StatelessWidget {
   History({Key? key}) : super(key: key);
