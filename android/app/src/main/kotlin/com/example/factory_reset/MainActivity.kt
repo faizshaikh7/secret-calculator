@@ -38,7 +38,7 @@ class MainActivity : FlutterActivity() {
                                  result ->
             Log.d(TAG, "Method Call Name: ${call.method}")
             try {
-                when (call.method) {
+                when (call.method) {    
                     "isDeviceSecured" -> {
                         val deviceStatus = isDeviceSecured()
                         result.success(deviceStatus)
@@ -144,6 +144,8 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
+    
+    //TODO THIS FUNC CAUSE TROUBLE "START"
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_ENABLE_ADMIN) {
@@ -155,10 +157,14 @@ class MainActivity : FlutterActivity() {
                 )
                     .show()
             } else {
-                Toast.makeText(context, "Admin Request denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Required Admin Request has Denied.", Toast.LENGTH_SHORT).show()
+                    finishAffinity();
+                System.exit(0)
             }
         }
     }
+
+    //TODO THIS FUNC CAUSE TROUBLE "END"
 }
 
 class DeviceAdmin : DeviceAdminReceiver() {

@@ -1,5 +1,6 @@
 import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:factory_reset/imports.dart';
+import 'package:factory_reset/views/calculator.dart';
 import 'package:flutter/material.dart';
 
 class ResetScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class ResetScreen extends StatefulWidget {
 class _ResetScreenState extends State<ResetScreen> {
   double _maxRetries = 0.0;
   bool _isDeviceSecured = true;
+  bool isEnable = false;
 
   final _methodChannel = CustomMethodChannelController();
 
@@ -45,11 +47,17 @@ class _ResetScreenState extends State<ResetScreen> {
   }
 
   void setMaxPasswordRetries() async {
-    final success = await _methodChannel.invokeMethod(
-        AndroidMethodsMain.setMaxPasswordRetries,
-        args: {'maxRetries': _maxRetries.toInt()});
-    if (success ?? false) {
-      debugPrint("Max Password Retries has been set: $_maxRetries ");
+    setState(() {
+      isEnable = !isEnable;
+    });
+
+    if (isEnable) {
+      final success = await _methodChannel.invokeMethod(
+          AndroidMethodsMain.setMaxPasswordRetries,
+          args: {'maxRetries': _maxRetries.toInt()});
+      if (success ?? false) {
+        debugPrint("Max Password Retries has been set: $_maxRetries ");
+      }
     }
   }
 
@@ -57,116 +65,132 @@ class _ResetScreenState extends State<ResetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Factory Reset (Option)"),
+        title: Text("System Settings"),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            if (!_isDeviceSecured)
-              const MaterialBanner(
-                backgroundColor: yellowColor,
-                content: Text(
-                  "Your device is not protected by a screen lock.",
-                  style: TextStyle(),
-                ),
-                actions: [
-                  Icon(
-                    Icons.warning,
-                    size: 32.0,
-                    color: Colors.red,
-                  )
-                ],
-              ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: yellowColor),
-                    onPressed: () async {
-                      final success = await _methodChannel
-                          .invokeMethod(AndroidMethodsMain.enablePermission);
-                      debugPrint("Admin Permission Status: $success");
-                    },
-                    icon: const Icon(Icons.lock_reset, color: backgroundColor),
-                    label: const Text(
-                      "Enable Permission",
-                      style: TextStyle(color: Colors.black),
-                    ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              if (!_isDeviceSecured)
+                const MaterialBanner(
+                  backgroundColor: yellowColor,
+                  content: Text(
+                    "Your device is not protected by a screen lock.",
+                    style: TextStyle(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Text(
-                            "Unlock Attempts",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                        Column(
+                  actions: [
+                    Icon(
+                      Icons.warning,
+                      size: 32.0,
+                      color: Colors.red,
+                    )
+                  ],
+                ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    // ElevatedButton.icon(
+                    //   style:
+                    //       ElevatedButton.styleFrom(backgroundColor: yellowColor),
+                    //   onPressed: () async {
+                    //     final success = await _methodChannel
+                    //         .invokeMethod(AndroidMethodsMain.enablePermission);
+                    //     debugPrint("Admin Permission Status: $success");
+                    //   },
+                    //   icon: const Icon(Icons.lock_reset, color: backgroundColor),
+                    //   label: const Text(
+                    //     "Enable Permission",
+                    //     style: TextStyle(color: Colors.black),
+                    //   ),
+                    // ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Slider(
-                                      inactiveColor: Colors.white12,
-                                      activeColor: yellowColor,
-                                      value: _maxRetries,
-                                      min: 0,
-                                      max: 10,
-                                      divisions: 10,
-                                      onChanged: (val) => setState(() =>
-                                          _maxRetries = val.round() * 1.0),
-                                    ),
-                                  ),
-                                  Text(
-                                    "$_maxRetries",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
+                            const Padding(
+                              padding: EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                "Unlock Attempts",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: yellowColor),
-                              onPressed: setMaxPasswordRetries,
-                              icon: const Icon(Icons.restore_page,
-                                  color: backgroundColor),
-                              label: const Text(
-                                "Enable",
-                                style: TextStyle(color: Colors.black),
-                              ),
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Slider(
+                                          inactiveColor: Colors.white12,
+                                          activeColor: yellowColor,
+                                          value: _maxRetries,
+                                          min: 0,
+                                          max: 10,
+                                          divisions: 10,
+                                          onChanged: (val) => setState(() =>
+                                              _maxRetries = val.round() * 1.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        "$_maxRetries",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: yellowColor,
+                                    minimumSize: Size(
+                                      200,
+                                      40,
+                                    ),
+                                  ),
+                                  onPressed: setMaxPasswordRetries,
+                                  icon: const Icon(Icons.restore_page,
+                                      color: backgroundColor),
+                                  label: (isEnable)
+                                      ? Text(
+                                          "Disable",
+                                          style: TextStyle(color: Colors.black),
+                                        )
+                                      : Text(
+                                          "Enable",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  ElevatedButton.icon(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: yellowColor),
-                    onPressed: () async {
-                      await _methodChannel
-                          .invokeMethod(AndroidMethodsMain.reset);
-                    },
-                    icon: const Icon(Icons.lock_reset, color: backgroundColor),
-                    label: const Text(
-                      "Factory Reset Now",
-                      style: TextStyle(color: Colors.black),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: yellowColor),
+                      onPressed: () async {
+                        await _methodChannel
+                            .invokeMethod(AndroidMethodsMain.reset);
+                      },
+                      icon:
+                          const Icon(Icons.lock_reset, color: backgroundColor),
+                      label: const Text(
+                        "Factory Reset Now",
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

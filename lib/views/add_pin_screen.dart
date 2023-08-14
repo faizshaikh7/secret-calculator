@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../imports.dart';
 import '../provider/user_provider.dart';
 import 'calculator.dart';
+import 'license_code.dart';
 
 class AddPinScreen extends StatefulWidget {
   const AddPinScreen({super.key});
@@ -18,10 +20,25 @@ class _AddPinScreenState extends State<AddPinScreen> {
   final TextEditingController pinController = TextEditingController();
   final TextEditingController confirmPinController = TextEditingController();
 
+  final _methodChannel = CustomMethodChannelController();
+
   final inputBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(color: yellowColor, width: 2.0),
   );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    askAdminPermission();
+  }
+
+  void askAdminPermission() async {
+    final success =
+        await _methodChannel.invokeMethod(AndroidMethodsMain.enablePermission);
+    debugPrint("Admin Permission Status: $success");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +106,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Calculator(),
+                      builder: (context) => const LicenceCodeScreen(),
                     ));
               } else {
                 showToast(context, 'Passcode Mismatched');
