@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:factory_reset/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +27,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   requestPermission() async {
-    final PermissionStatus picturesPermission =
-        await Permission.photos.request();
-
-    final PermissionStatus perPermission =
-        await Permission.mediaLibrary.request();
+    await Permission.photos.request();
+    await Permission.mediaLibrary.request();
 
     final PermissionStatus cameraPermission = await Permission.camera.request();
     if (cameraPermission != PermissionStatus.granted) {

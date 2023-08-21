@@ -1,6 +1,5 @@
 import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:factory_reset/imports.dart';
-import 'package:factory_reset/views/calculator.dart';
 import 'package:flutter/material.dart';
 
 class ResetScreen extends StatefulWidget {

@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../imports.dart';
 import '../provider/user_provider.dart';
-import 'calculator.dart';
 import 'license_code.dart';
 
 class AddPinScreen extends StatefulWidget {

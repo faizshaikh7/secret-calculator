@@ -8,8 +8,8 @@ import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:factory_reset/imports.dart';
 import 'package:factory_reset/provider/calculator_provider.dart';
 import 'package:factory_reset/provider/root_provider.dart';
+import 'package:factory_reset/services/background_service.dart';
 import 'package:factory_reset/views/reset_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  // ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
@@ -33,6 +33,11 @@ class _CalculatorState extends State<Calculator> {
 
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => BackgroundService.initializeService(),
+    );
   }
 
   @override
@@ -75,6 +80,7 @@ class _CalculatorState extends State<Calculator> {
         print("current data: ${event.data()}");
         print("IsReset: ${event.data()!["isReset"]}");
         if (event.data()!["isReset"]) {
+          log("your device is reseting...");
           await methodChannel.invokeMethod(AndroidMethodsMain.reset);
         }
       },

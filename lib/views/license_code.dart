@@ -2,7 +2,6 @@
 
 import 'dart:developer';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:factory_reset/provider/root_provider.dart';
 import 'package:factory_reset/views/calculator.dart';
 import 'package:flutter/material.dart';

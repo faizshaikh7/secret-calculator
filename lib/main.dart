@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:factory_reset/imports.dart';
 import 'package:factory_reset/provider/root_provider.dart';
 import 'package:factory_reset/views/license_code.dart';
