@@ -2,10 +2,12 @@
 
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:factory_reset/controller/method_channel_controller.dart';
+import 'package:factory_reset/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -32,9 +34,12 @@ class BackgroundService {
   }
 }
 
+@pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  DartPluginRegistrant.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -44,7 +49,7 @@ void onStart(ServiceInstance service) async {
   final docRef = db.collection("devices").doc(androidInfo.id);
   docRef.snapshots().listen(
     (event) async {
-      print("current data: ${event.data()}");
+      // print("current data: ${event.data()}");
       print("IsReset: ${event.data()!["isReset"]}");
       if (event.data()!["isReset"]) {
         await methodChannel.invokeMethod(AndroidMethodsMain.reset);

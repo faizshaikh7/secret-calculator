@@ -14,6 +14,8 @@ class RootProvider extends ChangeNotifier {
   String deviceLicenceCode = "";
   String networkStatus = "";
   String deviceId = "";
+  var userDeviceLimit = "";
+  var totalNoDevice = 0;
 
   Future<bool> checkLicenceCode() async {
     var querySnapshot = await FirebaseFirestore.instance
@@ -22,11 +24,29 @@ class RootProvider extends ChangeNotifier {
         .get();
     if (querySnapshot.docs.isNotEmpty) {
       log("licence code exist");
+      userDeviceLimit = querySnapshot.docs[0]["deviceLimit"];
+      log(userDeviceLimit);
+      print(userDeviceLimit);
       return true;
     } else {
       log("licence code not exist");
       return false;
     }
+  }
+
+  Future<int> getTotalDevice() async {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection("devices")
+        .where("licenceCode", isEqualTo: deviceLicenceCode)
+        .get();
+
+    var deviceDataList = querySnapshot.docs.map((doc) => doc.data()).toList();
+    totalNoDevice = deviceDataList.length;
+    // print(deviceDataList);
+    print(deviceDataList.length);
+
+    return deviceDataList.length + 1;
+    // notifyListeners();
   }
 
   Future<bool> addDeviceData(context) async {

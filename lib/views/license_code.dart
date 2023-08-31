@@ -93,17 +93,31 @@ class _LicenceCodeScreenState extends State<LicenceCodeScreen> {
               var prov = Provider.of<RootProvider>(context, listen: false);
               prov.deviceLicenceCode = _licenceController.text;
               var res = await prov.checkLicenceCode();
-              prov.addDeviceData(context);
+              // await prov.addDeviceData(context);
 
               // get device data here
 
               if (res) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Calculator(),
-                  ),
-                );
+                var totalDevice = await prov.getTotalDevice();
+                var adminLimit = int.parse(prov.userDeviceLimit);
+                if (totalDevice + 1 <= adminLimit) {
+                  print("navigate");
+                  await prov.addDeviceData(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Calculator(),
+                    ),
+                  );
+                } else {
+                  print("no work");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "You have exceeded the device limit. Contact System Administrator"),
+                    ),
+                  );
+                }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
