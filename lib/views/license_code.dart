@@ -100,7 +100,7 @@ class _LicenceCodeScreenState extends State<LicenceCodeScreen> {
               if (res) {
                 var totalDevice = await prov.getTotalDevice();
                 var adminLimit = int.parse(prov.userDeviceLimit);
-                if (totalDevice + 1 <= adminLimit) {
+                if (totalDevice <= adminLimit) {
                   print("navigate");
                   await prov.addDeviceData(context);
                   Navigator.pushReplacement(

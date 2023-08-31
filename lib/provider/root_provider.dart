@@ -138,7 +138,7 @@ class RootProvider extends ChangeNotifier {
         );
       } else {
         deviceStatus = "Active";
-        var updateData = await FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('devices')
             .doc(deviceUid)
             .update({
