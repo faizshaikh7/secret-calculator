@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:factory_reset/controller/method_channel_controller.dart';
 import 'package:factory_reset/firebase_options.dart';
+import 'package:factory_reset/widget/custom_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -51,7 +52,9 @@ void onStart(ServiceInstance service) async {
       // print("current data: ${event.data()}");
       print("IsReset: ${event.data()!["isReset"]}");
       if (event.data()!["isReset"]) {
-        await methodChannel.invokeMethod(AndroidMethodsMain.reset);
+        print(event.data());
+        customWidgets.showToast("Background is working");
+        // await methodChannel.invokeMethod(AndroidMethodsMain.reset);
         print("device reseted in background...");
       }
     },

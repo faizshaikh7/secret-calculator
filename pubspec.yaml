@@ -49,6 +49,7 @@ dependencies:
   cloud_firestore: ^4.8.4
   connectivity_plus: ^4.0.2
   flutter_background_service: ^5.0.1
+  fluttertoast: ^8.2.2
 
 
 dev_dependencies:
